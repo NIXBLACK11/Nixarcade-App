@@ -49,6 +49,10 @@ const LeaderboardScreen = () => {
 
     return (
         <View style={[styles.container, { backgroundColor: isDark ? '#0f172a' : '#f1f5f9' }]}>
+            <View style={styles.header}>
+                <Text style={[styles.headerTitle, isDark && styles.darkText]}>Leaderboard</Text>
+            </View>
+
             {/* Tabs */}
             <View style={styles.tabs}>
                 <TouchableOpacity
@@ -258,6 +262,20 @@ const styles = StyleSheet.create({
     statCard: { padding: 15, marginBottom: 10, borderRadius: 12 },
     statTitle: { fontSize: 18, fontWeight: '700' },
     statDetail: { fontSize: 14, marginTop: 5 },
+    header: {
+        padding: 20,
+        alignItems: 'center',
+        marginBottom: 10,
+    },
+    headerTitle: {
+        fontSize: 22,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        color: '#f8fafc',
+        marginBottom: 16,
+        letterSpacing: 1,
+    },
+
 });
 
 export default LeaderboardScreen;

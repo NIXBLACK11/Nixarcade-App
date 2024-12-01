@@ -16,12 +16,14 @@ import { User } from '@react-native-community/google-signin';
 import { useOkto, type OktoContextType } from 'okto-sdk-react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
+import { useRouter } from 'expo-router';
 
 const App: React.FC = () => {
     const [authModalVisible, setAuthModalVisible] = useState(false);
     const [authResult, setAuthResult] = useState<string>('');
     const navigation = useNavigation();
     const { createWallet, authenticate } = useOkto() as OktoContextType;
+    const router = useRouter();
 
     const handleGoogleLogin = async (idToken: string | undefined) => {
         if (!idToken) {
@@ -31,7 +33,6 @@ const App: React.FC = () => {
 
         authenticate(idToken, async (authResponse, error) => {
             if (authResponse) {
-                console.log('Authentication successful:', authResponse);
                 try {
                     await AsyncStorage.setItem('googleToken', authResponse.auth_token);
                 } catch (storageError) {

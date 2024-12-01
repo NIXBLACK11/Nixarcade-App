@@ -25,7 +25,6 @@ function GetButton({ title, apiFn }: GetButtonProps) {
                     onPress={() => {
                         apiFn()
                             .then((result) => {
-                                console.log(`${title}:`, result);
                                 setResultData(JSON.stringify(result, null, 2)); // Pretty print the JSON
                                 setModalVisible(true);
                             })

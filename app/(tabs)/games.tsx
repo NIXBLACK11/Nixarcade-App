@@ -9,6 +9,7 @@ import {
     ScrollView,
 } from 'react-native';
 import { useRouter } from 'expo-router';
+import { useNavigation } from '@react-navigation/native';
 
 interface GameCard {
     id: string;
@@ -23,13 +24,14 @@ export default function GamesScreen() {
     const isDark = true;
     const [searchText, setSearchText] = useState('');
     const router = useRouter();
+    const navigation = useNavigation();
 
     const games: GameCard[] = [
         {
             id: '1',
             name: 'Ludo',
             image: require('../../assets/images/ludo.png'),
-            route: '/games/ludo',
+            route: 'Ludo',
             tagline: "Play and win with your friends!",
             gradient: ['#FF6B6B', '#FF8E8E'],
         },
@@ -37,7 +39,7 @@ export default function GamesScreen() {
             id: '2',
             name: 'Snakes & Ladders',
             image: require('../../assets/images/snl.png'),
-            route: '/games/snl',
+            route: 'SnakesAndLadders',
             tagline: "Climb and slide your way to victory!",
             gradient: ['#4FACFE', '#00F2FE'],
         },
@@ -45,7 +47,7 @@ export default function GamesScreen() {
             id: '3',
             name: 'Tic Tac Toe',
             image: require('../../assets/images/ttt.png'),
-            route: '/games/ttt',
+            route: 'TicTacToe',
             tagline: "Challenge your friends to a classic game!",
             gradient: ['#43E97B', '#38F9D7'],
         },
@@ -53,7 +55,7 @@ export default function GamesScreen() {
             id: '4',
             name: 'Chess',
             image: require('../../assets/images/chess.png'),
-            route: '/games/comingsoon',
+            route: 'ComingSoon',
             tagline: "Master the board, conquer the mind!",
             gradient: ['#43E97B', '#38F9D7'],
         },
@@ -98,7 +100,7 @@ export default function GamesScreen() {
                                 </Text>
                                 <TouchableOpacity
                                     style={[styles.playButton, isDark && styles.darkPlayButton]}
-                                    onPress={() => router.push(game.route)}
+                                    onPress={() => navigation.navigate(game.route)}
                                 >
                                     <Text style={styles.playButtonText}>Play Now</Text>
                                 </TouchableOpacity>
@@ -106,8 +108,8 @@ export default function GamesScreen() {
                         </View>
                     ))}
                 </View>
-            </ScrollView>
-        </View>
+            </ScrollView >
+        </View >
     );
 }
 

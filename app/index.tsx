@@ -7,8 +7,15 @@ import Games from './(tabs)/games';
 import Blinks from './(tabs)/blinks';
 import Leaderboard from './(tabs)/leaderboard';
 import App from './App';
+import LudoGame from './games/ludo';
+import SnakesAndLaddersGame from './games/snl';
+import TicTacToeGame from './games/ttt';
+import RouletteGame from './blinks/roulette';
+import QwertyGame from './blinks/qwerty';
+import ScrambleGame from './blinks/scramble';
+import ComingSoon from './games/comingsoon';
 
-const OKTO_CLIENT_APP_SECRET = 'a57b71ce-f6a6-41fc-8677-0b19cf147f17';
+const OKTO_CLIENT_APP_SECRET = '';
 const Stack = createNativeStackNavigator();
 
 function Root() {
@@ -20,6 +27,13 @@ function Root() {
                 <Stack.Screen name="Games" component={Games} />
                 <Stack.Screen name="Blinks" component={Blinks} />
                 <Stack.Screen name="Leaderboard" component={Leaderboard} />
+                <Stack.Screen name="Ludo" component={LudoGame} />
+                <Stack.Screen name="SnakesAndLadders" component={SnakesAndLaddersGame} />
+                <Stack.Screen name="TicTacToe" component={TicTacToeGame} />
+                <Stack.Screen name="Roulette" component={RouletteGame} />
+                <Stack.Screen name="Qwerty" component={QwertyGame} />
+                <Stack.Screen name="Scramble" component={ScrambleGame} />
+                <Stack.Screen name="ComingSoon" component={ComingSoon} />
             </Stack.Navigator>
         </OktoProvider>
     );

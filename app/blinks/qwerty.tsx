@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useNavigation, useRouter } from 'expo-router';
 import { WebView } from 'react-native-webview';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
@@ -8,6 +8,7 @@ export default function QwertyGame() {
     const router = useRouter();
     const isDark = true; // Simulating dark mode.
     const blinksUrl = 'https://dial.to/?action=solana-action%3Ahttps%3A%2F%2Fqwerty.nixblack.site%2Fapi%2Factions%2Fcreate-game&cluster=devnet'
+    const navigation = useNavigation();
 
     return (
         <View style={styles.container}>
@@ -37,7 +38,7 @@ export default function QwertyGame() {
 
             {/* Bottom Action Bar */}
             <View style={[styles.bottomBar, isDark && styles.darkBottomBar, styles.shadow]}>
-                <TouchableOpacity onPress={() => router.push('/home')}>
+                <TouchableOpacity onPress={() => navigation.navigate('Home')}>
                     <Ionicons
                         name="home-outline"
                         size={24}
@@ -45,7 +46,7 @@ export default function QwertyGame() {
                     />
                     <Text style={styles.tabLabel}>Home</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => router.push('/blinks')}>
+                <TouchableOpacity onPress={() => navigation.navigate('Games')}>
                     <Ionicons
                         name="game-controller-outline"
                         size={24}

@@ -4,8 +4,8 @@ import { GoogleSignin, User } from '@react-native-community/google-signin';
 import CustomButton from './CustomButton';
 
 GoogleSignin.configure({
-    iosClientId: '719039667142-6jvc6vtj9kceg5r9emmdcobs1fce1rjh.apps.googleusercontent.com',
-    webClientId: '719039667142-cn1dqou2832eh5u179gq9jgs32u21bed.apps.googleusercontent.com',
+    iosClientId: '',
+    webClientId: '',
     offlineAccess: false,
 });
 
@@ -41,10 +41,10 @@ const GoogleSignInButton: React.FC<GoogleSignInButtonProps> = ({ onSignInSuccess
 
     return userInfo ? (
         <View style={styles.container}>
-            <Text style={styles.welcomeText}>
-                Welcome, {`${userInfo.user.givenName} ${userInfo.user.familyName}`}
-            </Text>
-            <CustomButton title="Sign out" onPress={onSignOut} />
+            {/* <Text style={styles.welcomeText}> */}
+            {/*     Welcome, {`${userInfo.user.givenName} ${userInfo.user.familyName}`} */}
+            {/* </Text> */}
+            {/* <CustomButton title="Sign out" onPress={onSignOut} /> */}
         </View>
     ) : (
         <CustomButton title="Sign in with Google" onPress={onSignIn} />

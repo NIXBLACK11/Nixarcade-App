@@ -1,12 +1,14 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useNavigation, useRouter } from 'expo-router';
 import { WebView } from 'react-native-webview';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { navigate } from 'expo-router/build/global-state/routing';
 
 export default function TicTacToeGame() {
     const router = useRouter();
     const isDark = true; // Simulating dark mode.
+    const navigation = useNavigation();
 
     return (
         <View style={styles.container}>
@@ -36,7 +38,7 @@ export default function TicTacToeGame() {
 
             {/* Bottom Action Bar */}
             <View style={[styles.bottomBar, isDark && styles.darkBottomBar, styles.shadow]}>
-                <TouchableOpacity onPress={() => router.push('/home')}>
+                <TouchableOpacity onPress={() => navigation.navigate('Home')}>
                     <Ionicons
                         name="home-outline"
                         size={24}
@@ -44,7 +46,7 @@ export default function TicTacToeGame() {
                     />
                     <Text style={styles.tabLabel}>Home</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => router.push('/games')}>
+                <TouchableOpacity onPress={() => navigation.navigate('Games')}>
                     <Ionicons
                         name="game-controller-outline"
                         size={24}

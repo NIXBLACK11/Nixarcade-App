@@ -4,10 +4,10 @@ import { useNavigation, useRouter } from 'expo-router';
 import { WebView } from 'react-native-webview';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
-export default function RouletteGame() {
+export default function ScrambleGame() {
     const router = useRouter();
     const isDark = true; // Simulating dark mode.
-    const blinksUrl = 'https://dial.to/?action=solana-action:https://roulette.nixblack.site/api/actions/create-roulette&cluster=devnet'
+    const blinksUrl = 'https://dial.to/?action=solana-action:https://scramble.nixblack.site/api/actions/create-roulette&cluster=devnet'
     const navigation = useNavigation();
 
     return (
@@ -27,7 +27,7 @@ export default function RouletteGame() {
                     style={styles.logo}
                     resizeMode="contain"
                 />
-                <Text style={styles.topBarText}>Roulette</Text>
+                <Text style={styles.topBarText}>Scramble</Text>
             </View>
 
             {/* Embedded WebView */}
@@ -124,4 +124,3 @@ const styles = StyleSheet.create({
         elevation: 5, // For Android
     },
 });
-

@@ -8,6 +8,7 @@ import {
     TouchableOpacity,
     ScrollView,
 } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
 
 interface BlinkCard {
@@ -23,13 +24,14 @@ export default function BlinksScreen() {
     const isDark = true;
     const [searchText, setSearchText] = useState('');
     const router = useRouter();
+    const navigation = useNavigation();
 
     const games: BlinkCard[] = [
         {
             id: '1',
             name: 'Qwerty',
             image: require('../../assets/images/qwerty.png'),
-            route: '/blinks/qwerty',
+            route: 'Qwerty',
             tagline: "Test your typing speed!",
             gradient: ['#FF6B6B', '#FF8E8E'],
         },
@@ -37,10 +39,19 @@ export default function BlinksScreen() {
             id: '2',
             name: 'Roulette',
             image: require('../../assets/images/roulette.png'),
-            route: '/blinks/roulette',
+            route: 'Roulette',
             tagline: "Red or Black, Your Choice!",
             gradient: ['#4FACFE', '#00F2FE'],
         },
+        {
+            id: '3',
+            name: 'Scramble',
+            image: require('../../assets/images/scramble.png'),
+            route: 'Scramble',
+            tagline: "Find the word!",
+            gradient: ['#4FACFE', '#00F2FE'],
+        },
+
     ];
 
     const filteredBlinks = games.filter((game) =>
@@ -82,7 +93,7 @@ export default function BlinksScreen() {
                                 </Text>
                                 <TouchableOpacity
                                     style={[styles.playButton, isDark && styles.darkPlayButton]}
-                                    onPress={() => router.push(game.route)}
+                                    onPress={() => navigation.navigate(game.route)}
                                 >
                                     <Text style={styles.playButtonText}>Play Now</Text>
                                 </TouchableOpacity>
