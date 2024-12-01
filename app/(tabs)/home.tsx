@@ -1,207 +1,182 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     SafeAreaView,
-    StatusBar,
     StyleSheet,
-    Button,
-    View,
+    ScrollView,
     Text,
-    Modal,
-    ScrollView
+    View,
+    ActivityIndicator,
+    Image,
+    Alert
 } from 'react-native';
-import GoogleSignInButton from '../../components/GoogleSignInButton';
-import { User } from '@react-native-community/google-signin';
 import { useOkto, type OktoContextType } from 'okto-sdk-react-native';
-import GetButton from '../../components/GetButton';
+import { GoogleSignin } from '@react-native-community/google-signin';
 
-const App: React.FC = () => {
-    const [userInfo, setUserInfo] = useState<User | null>(null);
-    const [authModalVisible, setAuthModalVisible] = useState(false);
-    const [authResult, setAuthResult] = useState<string>('');
-    const [walletInfo, setWalletInfo] = useState<any>(null);
+const HomeScreen: React.FC = () => {
+    const [loading, setLoading] = useState(false);
+    const [walletCreated, setWalletCreated] = useState(false);
+    const [userDetails, setUserDetails] = useState(null);
+    const [wallets, setWallets] = useState(null);
 
-    const { authenticate, getPortfolio } = useOkto() as OktoContextType;
+    const {
+        createWallet,
+        getUserDetails,
+        getWallets,
+    } = useOkto() as OktoContextType;
 
-    // Handle successful authentication
-    const handleAuthenticate = async (result: any, error: any) => {
-        if (result) {
-            console.log('Authentication successful:', result);
-            setAuthResult('Authentication successful!');
-            try {
-                const portfolio = await getPortfolio();
-                console.log('Portfolio:', portfolio);
-                setWalletInfo(portfolio);
-            } catch (portfolioError) {
-                console.error('Error fetching portfolio:', portfolioError);
-            }
-        } else if (error) {
-            console.error('Authentication error:', error);
-            setAuthResult('Authentication failed!');
+    // Initialize the wallet and fetch basic details
+    const initializeWallet = async () => {
+        try {
+            setLoading(true);
+            const walletResponse = await createWallet();
+            console.log('Wallet created successfully:', walletResponse);
+            setWalletCreated(true);
+
+            // Fetch user details and wallets after wallet creation
+            const userDetails = await getUserDetails();
+            setUserDetails(userDetails);
+            console.log('User details:', userDetails);
+
+            const walletList = await getWallets();
+            setWallets(walletList);
+            console.log('Wallet list:', walletList);
+        } catch (error) {
+            console.error('Error during wallet creation or data fetching:', error);
+            setWallets([{ id: '0', balance: '0' }]); // Set wallet to 0 if there's an error
+            setUserDetails({ name: 'Guest User', email: 'guest@domain.com', photoUrl: '' }); // Mock user details if there's an error
+            Alert.alert('Error', 'Failed to initialize wallet.');
+        } finally {
+            setLoading(false);
         }
-        setAuthModalVisible(true);
     };
 
-    // Handle Google sign-in success
-    const handleSignInSuccess = (userInfo: User | null) => {
-        console.log('Google sign-in successful:', userInfo);
-        setUserInfo(userInfo);
-    };
+    useEffect(() => {
+        initializeWallet();
+    }, []);
+
+    // Display loading state
+    if (loading) {
+        return (
+            <View style={styles.loader}>
+                <ActivityIndicator size="large" color="#9333ea" />
+                <Text style={styles.loadingText}>Initializing Wallet...</Text>
+            </View>
+        );
+    }
+
+    // Get user profile picture (Google Auth)
+    const userProfilePicture = userDetails?.photoUrl || 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y'; // Default if no photo
 
     return (
-        <>
-            <StatusBar barStyle="dark-content" />
-            <SafeAreaView style={styles.container}>
-                <View style={styles.content}>
-                    <Text style={styles.title}>Okto Enhanced App</Text>
+        <SafeAreaView style={styles.container}>
+            <ScrollView contentContainerStyle={styles.scrollContent}>
+                <Text style={styles.headerTitle}>Welcome to Okto Wallet</Text>
+                <Text style={styles.subtitle}>
+                    {walletCreated ? 'Wallet Initialized Successfully' : 'Initializing Wallet...'}
+                </Text>
 
-                    {/* Google Authentication Section */}
-                    <View style={styles.authSection}>
-                        <Text style={styles.sectionTitle}>Login</Text>
-                        <GoogleSignInButton onSignInSuccess={handleSignInSuccess} />
-                        <View style={styles.buttonSpacing} />
-                        <Button
-                            title="Authenticate with Wallet"
-                            onPress={() => {
-                                if (userInfo?.idToken) {
-                                    authenticate(userInfo.idToken, handleAuthenticate);
-                                } else {
-                                    alert('Please sign in with Google first.');
-                                }
-                            }}
-                        />
-                    </View>
-
-                    {/* Wallet Info Section */}
-                    {walletInfo && (
-                        <View style={styles.walletSection}>
-                            <Text style={styles.sectionTitle}>Wallet Information</Text>
-                            <ScrollView>
-                                <Text style={styles.walletText}>
-                                    {JSON.stringify(walletInfo, null, 2)}
-                                </Text>
-                            </ScrollView>
-                        </View>
-                    )}
-                </View>
-
-                {/* Authentication Modal */}
-                <Modal
-                    animationType="slide"
-                    transparent={false}
-                    visible={authModalVisible}
-                    onRequestClose={() => {
-                        setAuthModalVisible(false);
-                    }}
-                >
-                    <SafeAreaView style={styles.modalContainer}>
-                        <View style={styles.modalHeader}>
-                            <Text style={styles.modalTitle}>Authentication Result</Text>
-                        </View>
-                        <ScrollView style={styles.modalContent} nestedScrollEnabled={true}>
-                            <Text style={styles.modalText}>{authResult}</Text>
-                        </ScrollView>
-                        <View style={styles.modalFooter}>
-                            <Button
-                                title="Close"
-                                onPress={() => setAuthModalVisible(false)}
+                {/* User Details Section */}
+                {userDetails && (
+                    <View style={styles.card}>
+                        <View style={styles.userProfile}>
+                            <Image
+                                source={{ uri: userProfilePicture }}
+                                style={styles.profileImage}
                             />
+                            <View style={styles.userInfo}>
+                                <Text style={styles.cardTitle}>{userDetails?.name || 'Guest User'}</Text>
+                                <Text style={styles.cardText}>{userDetails?.email || 'guest@domain.com'}</Text>
+                            </View>
                         </View>
-                    </SafeAreaView>
-                </Modal>
-            </SafeAreaView>
-        </>
+                    </View>
+                )}
+
+                {/* Wallet Details Section */}
+                {wallets && (
+                    <View style={styles.card}>
+                        <Text style={styles.cardTitle}>Wallet Balance</Text>
+                        <Text style={styles.cardText}>{`Balance: ${wallets[0]?.balance || '0'}`}</Text>
+                        <Text style={styles.cardText}>{`Wallet Address: ${wallets[0]?.id || '0'}`}</Text>
+                    </View>
+                )}
+            </ScrollView>
+        </SafeAreaView>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#f5f5f5',
+        backgroundColor: '#0f172a', // Dark background for the app
     },
-    content: {
-        flex: 1,
-        padding: 20,
+    scrollContent: {
+        paddingBottom: 20,
+        paddingHorizontal: 20,
+        alignItems: 'center',
     },
-    title: {
-        fontSize: 24,
+    headerTitle: {
+        fontSize: 28,
         fontWeight: 'bold',
         textAlign: 'center',
-        marginBottom: 30,
-        color: '#333',
+        color: '#f8fafc', // White color for header
+        marginBottom: 16,
+        letterSpacing: 1,
     },
-    authSection: {
-        backgroundColor: 'white',
-        padding: 20,
-        borderRadius: 10,
+    subtitle: {
+        fontSize: 16,
+        color: '#f8fafc',
+        textAlign: 'center',
+        marginBottom: 30,
+    },
+    card: {
+        width: '100%',
+        padding: 15,
+        backgroundColor: '#1e293b', // Darker card background
+        borderRadius: 12,
         shadowColor: '#000',
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 3,
         elevation: 5,
         marginBottom: 20,
     },
-    walletSection: {
-        backgroundColor: 'white',
-        padding: 20,
-        borderRadius: 10,
-        shadowColor: '#000',
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-        elevation: 5,
-        marginTop: 20,
-    },
-    sectionTitle: {
+    cardTitle: {
         fontSize: 18,
-        fontWeight: '600',
+        fontWeight: 'bold',
+        color: '#f8fafc',
+        marginBottom: 10,
+    },
+    cardText: {
+        fontSize: 14,
+        color: '#94a3b8', // Lighter text color for card content
+        marginBottom: 5,
+    },
+    userProfile: {
+        flexDirection: 'row',
+        alignItems: 'center',
         marginBottom: 15,
-        color: '#333',
     },
-    walletText: {
-        fontSize: 14,
-        color: '#333',
-        fontFamily: 'monospace',
+    profileImage: {
+        width: 60,
+        height: 60,
+        borderRadius: 30,
+        marginRight: 15,
     },
-    buttonSpacing: {
-        height: 15,
+    userInfo: {
+        justifyContent: 'center',
     },
-    modalContainer: {
+    loader: {
         flex: 1,
-        backgroundColor: '#f5f5f5',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#0f172a', // Dark background
     },
-    modalHeader: {
-        padding: 20,
-        backgroundColor: 'white',
-        borderBottomWidth: 1,
-        borderBottomColor: '#e0e0e0',
-    },
-    modalTitle: {
-        fontSize: 20,
-        fontWeight: '600',
-        color: '#333',
-    },
-    modalContent: {
-        flex: 1,
-        padding: 20,
-    },
-    modalText: {
-        fontSize: 14,
-        fontFamily: 'monospace',
-        color: '#333',
-    },
-    modalFooter: {
-        padding: 20,
-        backgroundColor: 'white',
-        borderTopWidth: 1,
-        borderTopColor: '#e0e0e0',
+    loadingText: {
+        marginTop: 10,
+        fontSize: 16,
+        color: '#9333ea', // Purple loading text
     },
 });
 
-export default App;
+export default HomeScreen;
 
