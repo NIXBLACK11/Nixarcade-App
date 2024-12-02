@@ -17,7 +17,7 @@ Click the link below to download and install the app:
 - **Arcade Gaming on the Go**: Access your favorite NixArcade games anytime, anywhere.
 - **Powered by Okto SDK**: Enjoy enhanced functionality and a smooth gaming experience with Okto's integration.
 - **User-Friendly Interface**: Intuitive design for effortless navigation.
-- **Cross-Platform Support**: Optimized for both iOS and Android devices.
+- **Cross-Platform Support**: Optimized for Android devices.
 - **Secure and Scalable**: Built with robust backend support for a seamless experience.
 
 ---
@@ -27,7 +27,6 @@ Click the link below to download and install the app:
 ### Prerequisites
 
 1. **Device Requirements**: 
-   - iOS 11.0 or later
    - Android 6.0 or later
 2. **Internet Connection**: Required for accessing games and updates.
 
@@ -36,7 +35,6 @@ Click the link below to download and install the app:
 1. **Download the App**: Click [here](https://expo.dev/accounts/r0ckyr/projects/Nixarcade/builds/ad4e50b7-22d2-4855-995c-9f137ebb4810) to download the app.
 2. **Install**:
    - For Android: Open the downloaded APK and follow the on-screen instructions.
-   - For iOS: Follow the provided Expo installation steps.
 3. **Launch**: Open the app and start playing!
 
 ---
